@@ -157,4 +157,5 @@ async function getLeadDashboard(req, res) {
   }
 }
 
-module.exports = { createLead, getLeadDashboard };
+module.exports = { createLead
+  , getLeadDashboard };
