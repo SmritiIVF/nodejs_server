@@ -117,7 +117,7 @@ async function getLeadDashboard(req, res) {
 
     const todayLeads = await Lead.countDocuments({
       createdAt: { $gte: startOfToday, $lt: startOfTomorrow },
-    });
+    }); 
 
     const statusAgg = await Lead.aggregate([
       { $group: { _id: "$neodove.syncStatus", count: { $sum: 1 } } },
