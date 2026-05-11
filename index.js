@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/dbConnection.js');
 const cookieParser = require('cookie-parser');
 const leadRoutes = require('./routers/lead.routes.js');
+const authRoutes = require('./routers/auth.routes.js');
+const seedAdminUser = require('./utils/seedAdmin.js');
 dotenv.config();
 
 const cors = require('cors');
@@ -23,9 +25,11 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+app.use('/api/auth', authRoutes);
 app.use('/api/lead',leadRoutes);
 
-app.listen(PORT, () => {
-  connectDB();
+app.listen(PORT, async () => {
+  await connectDB();
+  await seedAdminUser();
   console.log(`Server is running on port ${PORT}`);
 });

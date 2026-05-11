@@ -102,11 +102,12 @@ async function createLead(req, res) {
 // GET: Dashboard data
 async function getLeadDashboard(req, res) {
   try {
-    let page = parseInt(req.query.page, 10) || 1;
-    let limit = parseInt(req.query.limit, 10) || 10;
-    if (page < 1) page = 1;
-    if (limit < 1) limit = 10;
-    const skip = (page - 1) * limit;
+    const pageQuery = parseInt(req.query.page, 10);
+    const limitQuery = parseInt(req.query.limit, 10);
+    const hasPagination = Number.isInteger(pageQuery) || Number.isInteger(limitQuery);
+    let page = Number.isInteger(pageQuery) && pageQuery > 0 ? pageQuery : 1;
+    let limit = Number.isInteger(limitQuery) && limitQuery > 0 ? limitQuery : 10;
+    const skip = hasPagination ? (page - 1) * limit : 0;
 
     const totalLeads = await Lead.countDocuments();
 
@@ -128,13 +129,16 @@ async function getLeadDashboard(req, res) {
       return acc;
     }, {});
 
-    const latestLeads = await Lead.find()
+    let latestLeadsQuery = Lead.find()
       .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
       .select("name mobile city_name source neodove.syncStatus createdAt");
 
-    const totalPages = Math.max(1, Math.ceil(totalLeads / limit));
+    if (hasPagination) {
+      latestLeadsQuery = latestLeadsQuery.skip(skip).limit(limit);
+    }
+
+    const latestLeads = await latestLeadsQuery;
+    const totalPages = hasPagination ? Math.max(1, Math.ceil(totalLeads / limit)) : 1;
 
     return res.status(200).json({
       success: true,
@@ -145,7 +149,7 @@ async function getLeadDashboard(req, res) {
         latestLeads,
         currentPage: page,
         totalPages,
-        limit,
+        limit: hasPagination ? limit : totalLeads,
       },
     });
   } catch (err) {
