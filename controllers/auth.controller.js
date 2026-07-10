@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const { signToken } = require("../utils/authToken");
 
+
 function sanitizeUser(user) {
   return {
     id: user._id.toString(),
@@ -12,7 +13,7 @@ function sanitizeUser(user) {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     if (!email || !password) {
       return res.status(400).json({
@@ -48,12 +49,12 @@ exports.login = async (req, res) => {
 
 exports.changePassword = async (req, res) => {
   try {
-    const { currentPassword, newPassword } = req.body;
+    const { newPassword } = req.body || {};
 
-    if (!currentPassword || !newPassword) {
+    if (!newPassword) {
       return res.status(400).json({
         success: false,
-        message: "Current password and new password are required",
+        message: "New password is required",
       });
     }
 
@@ -64,11 +65,11 @@ exports.changePassword = async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.user._id).select("+password");
-    if (!user || !user.comparePassword(currentPassword)) {
-      return res.status(401).json({
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
         success: false,
-        message: "Current password is incorrect",
+        message: "User not found",
       });
     }
 
@@ -87,3 +88,4 @@ exports.changePassword = async (req, res) => {
     });
   }
 };
+
