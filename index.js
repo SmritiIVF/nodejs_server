@@ -4,6 +4,8 @@ const connectDB = require('./config/dbConnection.js');
 const cookieParser = require('cookie-parser');
 const leadRoutes = require('./routers/lead.routes.js');
 const authRoutes = require('./routers/auth.routes.js');
+const consultationRoutes = require('./routers/consultation.routes.js');
+const slotRoutes = require('./routers/slot.routes.js');
 const seedAdminUser = require('./utils/seedAdmin.js');
 dotenv.config();
 
@@ -24,9 +26,12 @@ app.use(
 );
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/lead',leadRoutes);
+app.use('/api/consultation', consultationRoutes);
+app.use('/api/slots', slotRoutes);
 
 app.listen(PORT, async () => {
   await connectDB();
