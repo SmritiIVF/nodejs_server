@@ -9,6 +9,7 @@ const slotRoutes = require('./routers/slot.routes.js');
 const seedAdminUser = require('./utils/seedAdmin.js');
 dotenv.config();
 
+
 const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,7 +17,10 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
+      "http://localhost:3000",
       "http://localhost:3001",   // your current frontend
+      "http://127.0.0.1:3000",
+      "http://127.0.0.1:3001",
       "https://smritiivf.com", // add production frontend here
       "https://smriti-admin-dashboard.vercel.app"
     ],
