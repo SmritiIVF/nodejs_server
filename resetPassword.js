@@ -10,7 +10,7 @@ dotenv.config();
 
 // ── CONFIG ───────────────────────────────────────────────────────────────
 const TARGET_EMAIL = "admin@example.com";
-const NEW_PASSWORD = "Admin@1234";
+const NEW_PASSWORD = "Admin@123";
 const USER_NAME = "Admin";
 const USER_ROLE = "admin"; // Change if your app uses different roles
 // ─────────────────────────────────────────────────────────────────────────

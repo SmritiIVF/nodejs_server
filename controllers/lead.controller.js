@@ -98,7 +98,6 @@ async function createLead(req, res) {
     return res.status(500).json({ error: "Server error", details: err.message });
   }
 }
-
 // GET: Dashboard data
 async function getLeadDashboard(req, res) {
   try {
@@ -118,7 +117,7 @@ async function getLeadDashboard(req, res) {
 
     const todayLeads = await Lead.countDocuments({
       createdAt: { $gte: startOfToday, $lt: startOfTomorrow },
-    }); 
+    });
 
     const statusAgg = await Lead.aggregate([
       { $group: { _id: "$neodove.syncStatus", count: { $sum: 1 } } },
@@ -161,5 +160,7 @@ async function getLeadDashboard(req, res) {
   }
 }
 
-module.exports = { createLead
-  , getLeadDashboard };
+module.exports = {
+  createLead
+  , getLeadDashboard
+};
